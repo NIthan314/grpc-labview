@@ -618,22 +618,32 @@ LIBRARY_EXPORT int32_t ClientCompleteStreamingCall(
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+<<<<<<< HEAD
 LIBRARY_EXPORT int32_t ClientCancelCall(
     grpcApiClientToken callId,
     grpc_labview::LStrHandle* errorMessage,
     grpc_labview::AnyCluster* errorDetailsCluster)
 {
     auto call = gClientTokenManager.GetPtrForToken<grpc_labview::ClientCall>(callId);
+=======
+LIBRARY_EXPORT int32_t ClientCancelCall(grpc_labview::gRPCid* callId, grpc_labview::LStrHandle* errorMessage, grpc_labview::AnyCluster* errorDetailsCluster)
+{
+    auto call = callId->CastTo<grpc_labview::ClientCall>();
+>>>>>>> master
     if (!call)
     {
         return -1;
     }
+<<<<<<< HEAD
 
     // We've already got a shared_ptr for this token, so calling DestroyToken now
     // will just prevent any other API calls from grabbing the pointer.
     gClientTokenManager.DestroyTokenForPtr(callId);
     call->Cancel();
 
+=======
+    call->Cancel();
+>>>>>>> master
     int32_t result = 0;
     if (!call->_status.ok())
     {
@@ -647,6 +657,13 @@ LIBRARY_EXPORT int32_t ClientCancelCall(
         }
     }
 
+<<<<<<< HEAD
     call->_client->ActiveClientCalls.remove(call.get());
     return result;
 }
+=======
+    call->_client->ActiveClientCalls.remove(call);
+    delete call;
+    return result;
+}
+>>>>>>> master
